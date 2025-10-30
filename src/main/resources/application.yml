@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://shortline.proxy.rlwy.net:53715/railway
+    username: postgres
+    password: HjRCvebuReEgZGGQucblstISPauDHuct
