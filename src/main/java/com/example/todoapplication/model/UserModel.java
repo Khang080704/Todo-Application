@@ -20,4 +20,7 @@ public class UserModel {
     private String firstName;
     private String lastName;
     private String email;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private AuthUser authUser;
 }

@@ -2,10 +2,16 @@ package com.example.todoapplication.service;
 
 import com.example.todoapplication.dto.UserDto;
 import com.example.todoapplication.model.UserModel;
+import com.example.todoapplication.repository.AuthUserRepository;
 import com.example.todoapplication.repository.UserRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,11 +19,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private ModelMapper  modelMapper;
+    @Autowired
+    private AuthUserRepository  authUserRepository;
 
     public List<UserDto> getAllUser() {
          List<UserModel> listUser = userRepository.findAll();
@@ -76,5 +84,10 @@ public class UserService {
         else {
             return false;
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return authUserRepository.findByUsername(username).orElse(null);
     }
 }
