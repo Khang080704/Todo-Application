@@ -1,4 +1,4 @@
-package com.example.todoapplication;
+package com.example.todoapplication.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
