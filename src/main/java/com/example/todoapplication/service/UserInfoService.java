@@ -11,17 +11,22 @@ import java.util.Optional;
 
 @Service
 public class UserInfoService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
-    public UserDto getUserById(Long id){
-        Optional<User> user = userRepository.findById(id);
+    @Autowired
+    public UserInfoService(UserRepository userRepository, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
+
+    public UserDto getUser(Long user_id){
+        Optional<User> user = userRepository.findById(user_id);
         if(user.isPresent()){
-            UserDto userDto = modelMapper.map(user, UserDto.class);
-            return userDto;
+            return modelMapper.map(user.get(), UserDto.class);
         }
-        return null;
+        else {
+            return null;
+        }
     }
 }

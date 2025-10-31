@@ -3,36 +3,28 @@ package com.example.todoapplication.service;
 import com.example.todoapplication.entity.AuthUser;
 import com.example.todoapplication.entity.User;
 import com.example.todoapplication.repository.AuthUserRepository;
-import com.example.todoapplication.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
-
 public class AuthService {
-    @Autowired
-    private final CustomUserDetails customUserDetails;
-    @Autowired
     private final AuthUserRepository authUserRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
+    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+
     @Autowired
-    private UserDetailsService userDetailsService;
-    @Autowired
-    private JwtService jwtService;
+    public AuthService(AuthUserRepository aUserRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService) {
+        this.authUserRepository = aUserRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+    }
 
     public boolean registerUser(String username, String password, String email, String firstname, String lastname) {
         try {
@@ -58,10 +50,11 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
+        AuthUser authUser = authUserRepository.findByUsername(username);
+        System.out.println(authUser.getUser().getId());
 
-        UserDetails user = userDetailsService.loadUserByUsername(username);
-        String accessToken = jwtService.generateAccessToken(user.getUsername());
-        String refreshToken = jwtService.generateRefreshToken(user.getUsername());
+        String accessToken = jwtService.generateAccessToken(authUser.getUsername(), authUser.getUser().getId());
+        String refreshToken = jwtService.generateRefreshToken(authUser.getUsername(), authUser.getUser().getId());
         return Map.of(
                 "accessToken", accessToken,
                 "refreshToken", refreshToken
