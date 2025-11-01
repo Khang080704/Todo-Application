@@ -51,7 +51,6 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(username, password)
         );
         AuthUser authUser = authUserRepository.findByUsername(username);
-        System.out.println(authUser.getUser().getId());
 
         String accessToken = jwtService.generateAccessToken(authUser.getUsername(), authUser.getUser().getId());
         String refreshToken = jwtService.generateRefreshToken(authUser.getUsername(), authUser.getUser().getId());
@@ -60,5 +59,10 @@ public class AuthService {
                 "refreshToken", refreshToken
         );
 
+    }
+
+    public String getAccessTokenFromRefreshToken(String refreshToken) {
+        String newAccessToken = jwtService.getAccessTokenFromRefreshToken(refreshToken);
+        return newAccessToken;
     }
 }

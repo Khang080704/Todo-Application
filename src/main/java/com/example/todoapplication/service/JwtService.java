@@ -41,6 +41,14 @@ public class JwtService {
                 .compact();
     }
 
+    public String getAccessTokenFromRefreshToken(String refreshToken) {
+        String user_name = extractUsername(refreshToken);
+        Long id = extractUserId(refreshToken);
+        String newAccessToken = generateAccessToken(user_name, id);
+        return newAccessToken;
+    }
+
+
     public String extractUsername(String token) {
         return parseToken(token).getSubject();
     }

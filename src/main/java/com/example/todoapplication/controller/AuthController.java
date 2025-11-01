@@ -1,11 +1,11 @@
 package com.example.todoapplication.controller;
 
 import com.example.todoapplication.model.LoginRequest;
+import com.example.todoapplication.model.RefreshTokenRequest;
 import com.example.todoapplication.model.RegisterRequest;
 import com.example.todoapplication.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +21,6 @@ public class AuthController {
         this.authService = authService;
     }
 
-
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequest registerRequest) {
         authService.registerUser(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getEmail(), registerRequest.getFirstName(), registerRequest.getLastName());
@@ -34,4 +33,9 @@ public class AuthController {
         return ResponseEntity.ok().body(result);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity refresh(@RequestBody RefreshTokenRequest refreshToken) {
+        String newAccessToken = authService.getAccessTokenFromRefreshToken(refreshToken.getRefreshToken());
+        return ResponseEntity.ok().body(newAccessToken);
+    }
 }

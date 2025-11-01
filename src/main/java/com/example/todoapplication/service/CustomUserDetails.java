@@ -1,6 +1,7 @@
 package com.example.todoapplication.service;
 
 import com.example.todoapplication.entity.AuthUser;
+import com.example.todoapplication.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,10 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
+    }
+
+    public User getUserInfo() {
+        return user.getUser();
     }
 
     @Override
