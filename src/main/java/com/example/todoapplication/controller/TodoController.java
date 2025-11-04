@@ -30,4 +30,15 @@ public class TodoController {
             return ResponseEntity.internalServerError().body("Failed to add");
         }
     }
+
+    @PutMapping("/{todo_id}")
+    public ResponseEntity changeStatus(@PathVariable("todo_id") Long todo_id) {
+        final boolean changeSuccessfully = todoService.changeStatus(todo_id);
+        if (changeSuccessfully) {
+            return ResponseEntity.ok().body("Successfully changed");
+        }
+        else {
+            return ResponseEntity.internalServerError().body("Failed to change");
+        }
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TodoService {
@@ -48,5 +49,18 @@ public class TodoService {
         user.addNewTodo(todo);
         userRepository.save(user);
         return true;
+    }
+
+    public boolean changeStatus(Long todo_id) {
+        Optional<Todo> todo = todoRepository.findById(todo_id);
+        if(todo.isPresent()) {
+            Todo currentTodo = todo.get();
+            currentTodo.setState(!currentTodo.isState());
+            todoRepository.save(currentTodo);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
