@@ -1,10 +1,13 @@
 package com.example.todoapplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,4 +26,19 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private AuthUser authUser;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "currentUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Todo> todos;
+
+    public void addNewTodo(Todo newTodo) {
+        todos.add(newTodo);
+        newTodo.setCurrentUser(this);
+    }
+    public void deleteTodo(Long id) {
+        todos.removeIf(t -> t.getId().equals(id));
+    }
+    public void changeState(Long id) {
+
+    }
 }
