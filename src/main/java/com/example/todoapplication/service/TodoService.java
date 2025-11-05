@@ -1,20 +1,16 @@
 package com.example.todoapplication.service;
 
 import com.example.todoapplication.dto.TodoDto;
-import com.example.todoapplication.dto.UserDto;
 import com.example.todoapplication.entity.Todo;
 import com.example.todoapplication.entity.User;
 import com.example.todoapplication.repository.TodoRepository;
 import com.example.todoapplication.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TodoService {
@@ -52,15 +48,44 @@ public class TodoService {
     }
 
     public boolean changeStatus(Long todo_id) {
-        Optional<Todo> todo = todoRepository.findById(todo_id);
-        if(todo.isPresent()) {
-            Todo currentTodo = todo.get();
-            currentTodo.setState(!currentTodo.isState());
-            todoRepository.save(currentTodo);
-            return true;
+        User user = userInfoService.getUserInfo();
+        Todo todo = todoRepository.findByIdAndUserId(todo_id, user.getId());
+        if(todo == null) {
+            return false;
         }
         else {
+            todo.setState(!todo.isState());
+            todoRepository.save(todo);
+            return true;
+        }
+    }
+
+    private Todo getTodoByTodoIdAndUserId(Long todo_id) {
+        User user = userInfoService.getUserInfo();
+        Todo todo = todoRepository.findByIdAndUserId(todo_id, user.getId());
+        return todo;
+    }
+
+    public boolean deleteTodo(Long todo_id) {
+        Todo todo = getTodoByTodoIdAndUserId(todo_id);
+        if(todo == null) {
             return false;
+        }
+        else {
+            todoRepository.deleteById(todo_id);
+            return true;
+        }
+    }
+
+    public boolean changeTodoName(Long todo_id, String todoName) {
+        Todo todo = getTodoByTodoIdAndUserId(todo_id);
+        if(todo==null) {
+            return false;
+        }
+        else {
+            todo.setTodoName(todoName);
+            todoRepository.save(todo);
+            return true;
         }
     }
 }
