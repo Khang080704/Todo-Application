@@ -7,6 +7,7 @@ import java.util.Map;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -50,7 +50,7 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
-        AuthUser authUser = authUserRepository.findByUsername(username);
+        AuthUser authUser = authUserRepository. findByUsername(username);
 
         String accessToken = jwtService.generateAccessToken(authUser.getUsername(), authUser.getUser().getId());
         String refreshToken = jwtService.generateRefreshToken(authUser.getUsername(), authUser.getUser().getId());
