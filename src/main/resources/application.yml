@@ -1,12 +1,22 @@
+
+
 spring:
   jpa:
     database: postgresql
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: drop
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://shortline.proxy.rlwy.net:53715/railway
+    url: jdbc:postgresql://localhost:5432/todo
     username: postgres
-    password: HjRCvebuReEgZGGQucblstISPauDHuct
+    password: 123456
+  flyway:
+    url: jdbc:postgresql://localhost:5432/todo
+    user: postgres
+    password: 123456
+    baseline-on-migrate: true
+
+server:
+  port: 8081
